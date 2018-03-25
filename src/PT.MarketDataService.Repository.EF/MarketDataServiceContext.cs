@@ -1,0 +1,27 @@
+﻿using System.Data.Entity;
+using PT.MarketDataService.Core.Entities;
+using PT.MarketDataService.Repository.EF.Mappings;
+
+namespace PT.MarketDataService.Repository.EF
+{
+    public class MarketDataServiceContext : DbContext
+    {
+        public MarketDataServiceContext() : base("name=DefaultConnection")
+        {
+            
+        }
+
+        public DbSet<Scanner> Scanners { get; set; }
+        public DbSet<ScannerConfig> ScannerConfigs { get; set; }
+        public DbSet<ScannerParameter> ScannerParameters { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Configurations.Add(new ScannerMap());
+            modelBuilder.Configurations.Add(new ScannerConfigMap());
+            modelBuilder.Configurations.Add(new ScannerParameterMap());
+
+            base.OnModelCreating(modelBuilder);
+        }
+    }
+}

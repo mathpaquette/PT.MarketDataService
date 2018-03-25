@@ -1,0 +1,13 @@
+{
+  "sharpRepository": {
+    "repositories": {
+      "default": "ef",
+      "ef": {
+        "factory": "SharpRepository.EfRepository.EfConfigRepositoryFactory, SharpRepository.EfRepository",
+        "dbContextType": "PT.MarketDataService.Repository.EF.MarketDataServiceContext, PT.MarketDataService.Repository.EF", // required if dbContext is not injected with DependencyResolver
+        "cachingStrategy": "none",
+        "cachingProvider": "noCachingProvider"
+      }
+    }
+  }
+}
