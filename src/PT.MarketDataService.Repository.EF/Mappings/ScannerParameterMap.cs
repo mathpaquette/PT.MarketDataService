@@ -11,6 +11,11 @@ namespace PT.MarketDataService.Repository.EF.Mappings
 
             // key
             HasKey(t => t.Id);
+
+            // many-to-one
+            HasMany(p => p.Scanners)
+                .WithRequired(s => s.Parameter)
+                .HasForeignKey(s => s.ParameterId);
         }
     }
 }

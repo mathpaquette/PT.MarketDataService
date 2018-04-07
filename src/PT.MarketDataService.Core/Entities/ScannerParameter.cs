@@ -1,8 +1,14 @@
-﻿namespace PT.MarketDataService.Core.Entities
+﻿using System.Collections.Generic;
+
+namespace PT.MarketDataService.Core.Entities
 {
     public class ScannerParameter
     {
-        public int Id { get; set; }
+        public ScannerParameter()
+        {
+            Scanners = new HashSet<Scanner>();
+        }
+
         public string ExcludeConvertible { get; set; }
         public double? CouponRateBelow { get; set; }
         public double? CouponRateAbove { get; set; }
@@ -24,5 +30,10 @@
         public int? NumberOfRows { get; set; }
         public string ScannerSettingPairs { get; set; }
         public string StockTypeFilter { get; set; }
+
+        public int Id { get; set; }
+        public int ScannerConfigId { get; set; }
+        public ScannerConfig ScannerConfig { get; set; }
+        public ICollection<Scanner> Scanners { get; set; }
     }
 }

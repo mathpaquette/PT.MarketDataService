@@ -81,8 +81,20 @@
     <Reference Include="SharpRepository.EfRepository, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SharpRepository.EfRepository.2.0.2\lib\net451\SharpRepository.EfRepository.dll</HintPath>
     </Reference>
+    <Reference Include="SharpRepository.Ioc.SimpleInjector, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpRepository.Ioc.SimpleInjector.1.5.0.2\lib\net452\SharpRepository.Ioc.SimpleInjector.dll</HintPath>
+    </Reference>
     <Reference Include="SharpRepository.Repository, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SharpRepository.Repository.2.0.3\lib\net451\SharpRepository.Repository.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector, Version=4.1.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SimpleInjector.4.1.0\lib\net45\SimpleInjector.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector.Extensions.LifetimeScoping, Version=2.4.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SimpleInjector.Extensions.LifetimeScoping.2.4.0\lib\net40-client\SimpleInjector.Extensions.LifetimeScoping.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector.Packaging, Version=4.1.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SimpleInjector.Packaging.4.1.0\lib\net40\SimpleInjector.Packaging.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -151,12 +163,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultInitializer.cs" />
+    <Compile Include="Mappings\Level1MarketDataMap.cs" />
     <Compile Include="Mappings\ScannerConfigMap.cs" />
     <Compile Include="Mappings\ScannerParameterMap.cs" />
     <Compile Include="Mappings\ScannerMap.cs" />
+    <Compile Include="Mappings\ScannerRowMap.cs" />
     <Compile Include="MarketDataServiceContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\Level1MarketDataRepository.cs" />
+    <Compile Include="Repositories\ScannerConfigRepository.cs" />
     <Compile Include="Repositories\ScannerRepository.cs" />
+    <Compile Include="RepositoryModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
