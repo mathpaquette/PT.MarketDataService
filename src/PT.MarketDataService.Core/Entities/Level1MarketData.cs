@@ -7,7 +7,9 @@ namespace PT.MarketDataService.Core.Entities
         public int Id { get; set; }
 
         public DateTime Timestamp { get; set; }
-        public string Symbol { get; set; }
+
+        public int ContractId { get; set; }
+        public Contract Contract { get; set; }
 
         public int? BidSize { get; set; }
         public double? Bid { get; set; }

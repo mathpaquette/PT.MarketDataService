@@ -7,6 +7,6 @@ namespace PT.MarketDataService.Core.DomainServices
     {
         Task InitializeAsync();
         Task<Scanner> GetScannerAsync(ScannerParameter scannerParameter);
-        Task<Level1MarketData> GetLevel1MarketDataAsync(string symbol);
+        Task<Level1MarketData> GetLevel1MarketDataAsync(Contract contract);
     }
 }

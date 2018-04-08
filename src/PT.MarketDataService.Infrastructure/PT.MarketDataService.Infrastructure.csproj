@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="DomainServices\AppConfig.cs" />
     <Compile Include="DomainServices\MarketDataProvider.cs" />
+    <Compile Include="Extensions\ContractExtensions.cs" />
     <Compile Include="Extensions\Level1MarketDataExtensions.cs" />
     <Compile Include="Extensions\ScannerParameterExtensions.cs" />
     <Compile Include="InfrastructureModule.cs" />

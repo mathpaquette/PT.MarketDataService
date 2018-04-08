@@ -24,9 +24,10 @@ namespace PT.MarketDataService.Repository.EF
             container.RegisterSharpRepository(sharpConfig);
 
             // repositories
-            container.Register<ILevel1MarketDataRepository>(() => new Level1MarketDataRepository(sharpConfig));
-            container.Register<IScannerRepository>(() => new ScannerRepository(sharpConfig));
+            container.Register<ILevel1MarketDataRepository>(() => new Level1MarketDataRepository(new MarketDataServiceContext()));
+            container.Register<IScannerRepository>(() => new ScannerRepository(new MarketDataServiceContext()));
             container.Register<IScannerConfigRepository>(() => new ScannerConfigRepository(sharpConfig));
+            container.Register<IContractRepository>(() => new ContractRepository(sharpConfig), Lifestyle.Singleton);
         }
     }
 }

@@ -11,6 +11,8 @@ namespace PT.MarketDataService.Repository.EF.Mappings
 
             // key
             HasKey(t => t.Id);
+
+            HasRequired(s => s.Contract);
         }
     }
 }

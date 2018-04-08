@@ -46,13 +46,16 @@ namespace PT.MarketDataService.Infrastructure.DomainServices
 
             var reqId = new Random(DateTime.Now.Millisecond).Next();
 
-            var ibScanner = new Scanner();
+            var ibScanner = new Scanner()
+            {
+                Parameter = scannerParameter
+            };
 
             EventHandler<ScannerEventArgs> scanner = (sender, args) =>
             {
                 if (args.RequestId != reqId) return;
-
-                ibScanner.Rows.Add(new ScannerRow() { Rank = args.Rank, Symbol = args.ContractDetails.Summary.Symbol });
+                var contract = args.ContractDetails.Summary.ToEntityContract();
+                ibScanner.Rows.Add(new ScannerRow() { Rank = args.Rank, Contract = contract });
             };
 
             EventHandler<ScannerEndEventArgs> scannerEnd = (sender, args) =>
@@ -76,12 +79,12 @@ namespace PT.MarketDataService.Infrastructure.DomainServices
             return res.Task;
         }
 
-        public Task<Level1MarketData> GetLevel1MarketDataAsync(string symbol)
+        public Task<Level1MarketData> GetLevel1MarketDataAsync(Core.Entities.Contract contract)
         {
             var reqId = new Random(DateTime.Now.Millisecond).Next();
             var level1MarketData = new Level1MarketData()
             {
-                Symbol = symbol.ToUpper(),
+                Contract = contract,
                 Timestamp = DateTime.Now
             };
 
@@ -114,15 +117,9 @@ namespace PT.MarketDataService.Infrastructure.DomainServices
             EventDispatcher.TickSize += tickSize;
             EventDispatcher.TickPrice += tickPrice;
 
-            var contract = new Contract
-            {
-                Symbol = symbol.ToUpper(),
-                SecType = "STK",
-                Currency = "USD",
-                Exchange = "SMART"
-            };
+            var ibContract = contract.ToIbContract();
 
-            ClientSocket.reqMktData(reqId, contract, GenericTick.OPTION_VOLUME.ToString(), false, false, new List<TagValue>());
+            ClientSocket.reqMktData(reqId, ibContract, GenericTick.OPTION_VOLUME.ToString(), false, false, new List<TagValue>());
 
             res.Task.ContinueWith(x =>
             {

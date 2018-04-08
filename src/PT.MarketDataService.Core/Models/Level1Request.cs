@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using PT.MarketDataService.Core.Entities;
 using PT.MarketDataService.Core.Extensions;
 
 namespace PT.MarketDataService.Core.Models
@@ -16,14 +17,14 @@ namespace PT.MarketDataService.Core.Models
         private readonly HashSet<int> _scannerParameterIds;
         private readonly object _mutex = new Object();
 
-        public Level1Request(string symbol, int frequency)
+        public Level1Request(Contract contract, int frequency)
         {
-            Symbol = symbol;
+            Contract = contract;
             Frequency = TimeSpan.FromSeconds(frequency);
             _scannerParameterIds = new HashSet<int>();
         }
 
-        public string Symbol { get; }
+        public Contract Contract { get; }
         public TimeSpan Frequency { get; }
         public DateTime LastUpdate { get; private set; }
 

@@ -11,13 +11,17 @@ namespace PT.MarketDataService.Repository.EF
             Database.SetInitializer(new DefaultInitializer());
         }
 
+        public DbSet<Contract> Contracts { get; set; }
         public DbSet<Level1MarketData> Level1MarketDatas { get; set; }
         public DbSet<Scanner> Scanners { get; set; }
         public DbSet<ScannerConfig> ScannerConfigs { get; set; }
         public DbSet<ScannerParameter> ScannerParameters { get; set; }
+        public DbSet<ScannerRow> ScannerRows { get; set; }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Configurations.Add(new ContractMap());
             modelBuilder.Configurations.Add(new Level1MarketDataMap());
             modelBuilder.Configurations.Add(new ScannerMap());
             modelBuilder.Configurations.Add(new ScannerRowMap());

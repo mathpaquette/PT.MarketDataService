@@ -10,6 +10,7 @@ using PT.MarketDataService.Core.Extensions;
 using PT.MarketDataService.Core.Models;
 using PT.MarketDataService.Core.Providers;
 using PT.MarketDataService.Core.Repositories;
+using SharpRepository.Repository;
 
 namespace PT.MarketDataService.Core.Controllers
 {
@@ -22,18 +23,18 @@ namespace PT.MarketDataService.Core.Controllers
         private readonly ActionBlock<ScannerRequest> _scannerRequestsQueue;
         private readonly IMarketDataProvider _marketDataProvider;
         private readonly IScannerRequestService _scannerRequestService;
-        private readonly IScannerRepositoryFactory _scannerRepositoryFactory;
         private readonly ITimeProvider _timeProvider;
+        private readonly ScannerService _scannerService;
 
 
         public ScannerController(
             IMarketDataProvider marketDataProvider,
             IScannerRequestService scannerRequestService,
-            IScannerRepositoryFactory scannerRepositoryFactory,
-            ITimeProvider timeProvider)
+            ITimeProvider timeProvider,
+            ScannerService scannerService)
         {
+            _scannerService = scannerService;
             _timeProvider = timeProvider;
-            _scannerRepositoryFactory = scannerRepositoryFactory;
             _scannerRequestService = scannerRequestService;
             _marketDataProvider = marketDataProvider;
 
@@ -49,7 +50,7 @@ namespace PT.MarketDataService.Core.Controllers
 
         private async Task ProcessRequest(ScannerRequest request)
         {
-            if (!request.IsOnline())
+            if (!request.IsOnline() && false)
             {
                 Logger.Info("ScannerParameter: {0} is OFFLINE. Waking up on: {1}", request.Parameter.Id, _timeProvider.Now + request.UntilExpiration);
                 request.Signal();
@@ -65,39 +66,22 @@ namespace PT.MarketDataService.Core.Controllers
             request.Signal();
 
             // Notify changes
-            NotifyScannerChanges(request, new Scanner());
+            NotifyScannerChanges(request, scanner);
 
             // save the to database
-            PersistScanner(scanner, request.Parameter.Id);
+            _scannerService.Save(scanner);
         }
 
         private void NotifyScannerChanges(ScannerRequest request, Scanner current)
         {
-            // get changes from empty Scanner
+            // get changes from previous scanner
             var scannerChanges = request.GetScannerChanges(current);
-
             ScannerChange.RaiseEvent(this, new ScannerChangeEventArgs(request.Parameter.Id, scannerChanges));
-        }
-
-        private void PersistScanner(Scanner scanner, int scannerParamId)
-        {
-            using (var scannerRepository = _scannerRepositoryFactory.CreateNew())
-            {
-                try
-                {
-                    scanner.ParameterId = scannerParamId;
-                    scannerRepository.Add(scanner);
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e);
-                }
-            }
         }
 
         private void InitializeScannerRequests()
         {
-            var scannerRequests = _scannerRequestService.GetScannerRequests().ToList();
+            var scannerRequests = _scannerRequestService.GetScannerRequests().Take(1).ToList();
             foreach (var scannerRequest in scannerRequests)
             {
                 scannerRequest.Timeout += ScannerRequestOnTimeout;

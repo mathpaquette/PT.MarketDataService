@@ -18,24 +18,24 @@ namespace PT.MarketDataService.Core.Controllers
 
         private readonly IMarketDataProvider _marketDataProvider;
         private readonly ScannerController _scannerController;
-        private readonly Dictionary<string, Level1Request> _level1RequestsBySymbol;
+        private readonly Dictionary<Contract, Level1Request> _level1RequestsByContract;
         private readonly ActionBlock<Level1Request> _level1RequestQueue;
-        private readonly ILevel1MarketDataRepositoryFactory _level1MarketDataRepositoryFactory;
 
         private readonly int _level1RequestFrequency;
+        private readonly Level1MarketDataService _level1MarketDataService;
 
         public Level1Controller(
             IMarketDataProvider marketDataProvider,
             ScannerController scannerController,
-            ILevel1MarketDataRepositoryFactory level1MarketDataRepositoryFactory,
+            Level1MarketDataService level1MarketDataService,
             IAppConfig appConfig)
         {
+            _level1MarketDataService = level1MarketDataService;
             _level1RequestFrequency = appConfig.Level1RequestFrequencySec;
 
-            _level1MarketDataRepositoryFactory = level1MarketDataRepositoryFactory;
             _scannerController = scannerController;
             _marketDataProvider = marketDataProvider;
-            _level1RequestsBySymbol = new Dictionary<string, Level1Request>();
+            _level1RequestsByContract = new Dictionary<Contract, Level1Request>();
 
             _level1RequestQueue = new ActionBlock<Level1Request>(
                 async request => await ProcessRequest(request),
@@ -54,29 +54,21 @@ namespace PT.MarketDataService.Core.Controllers
 
             if (!request.HasExpired())
             {
-                Logger.Info("Not expired level 1 request for Symbol: {0}... ({1})", request.Symbol, _level1RequestQueue.InputCount);
+                Logger.Info("Not expired level 1 request for Symbol: {0}... ({1})", request.Contract, _level1RequestQueue.InputCount);
                 request.Signal();
                 return;
             }
 
             // make a market request
-            Logger.Info("Requesting level 1 for Symbol: {0}... ({1})", request.Symbol, _level1RequestQueue.InputCount);
-            var level1MarketData = await _marketDataProvider.GetLevel1MarketDataAsync(request.Symbol);
+            Logger.Info("Requesting level 1 for Symbol: {0}... ({1})", request.Contract, _level1RequestQueue.InputCount);
+            var level1MarketData = await _marketDataProvider.GetLevel1MarketDataAsync(request.Contract);
 
             request.Signal();
 
             // persist the data
-            PersistData(level1MarketData);
-        }
-
-        private void PersistData(Level1MarketData level1MarketData)
-        {
             try
             {
-                using (var repo = _level1MarketDataRepositoryFactory.CreateNew())
-                {
-                    repo.Add(level1MarketData);
-                }
+                _level1MarketDataService.Save(level1MarketData);
             }
             catch (Exception e)
             {
@@ -91,50 +83,50 @@ namespace PT.MarketDataService.Core.Controllers
                 switch (scannerChange.Type)
                 {
                     case ScannerChangeType.Added:
-                        CreateLevel1Request(args.ScannerParameterId, scannerChange.Symbol);
+                        CreateLevel1Request(args.ScannerParameterId, scannerChange.Contract);
                         break;
                     case ScannerChangeType.Removed:
-                        RemoveLevel1Request(args.ScannerParameterId, scannerChange.Symbol);
+                        RemoveLevel1Request(args.ScannerParameterId, scannerChange.Contract);
                         break;
                 }
             }
         }
 
-       private void CreateLevel1Request(int scannerParameterId, string symbol)
+       private void CreateLevel1Request(int scannerParameterId, Contract contract)
         {
-            lock (_level1RequestsBySymbol)
+            lock (_level1RequestsByContract)
             {
-                if (!_level1RequestsBySymbol.TryGetValue(symbol, out var request))
+                if (!_level1RequestsByContract.TryGetValue(contract, out var request))
                 {
-                    request = new Level1Request(symbol, _level1RequestFrequency);
+                    request = new Level1Request(contract, _level1RequestFrequency);
                     request.Timeout += RequestOnTimeout;
-                    _level1RequestsBySymbol.Add(symbol, request);
+                    _level1RequestsByContract.Add(contract, request);
                 }
 
                 if (request.TrySetOnline(scannerParameterId))
                 {
                     request.Start();
                     _level1RequestQueue.Post(request);
-                    Logger.Info("Symbol: {0} is ONLINE with Parameter: {1}", symbol, scannerParameterId);
+                    Logger.Info("Symbol: {0} is ONLINE with Parameter: {1}", contract, scannerParameterId);
                 }
             }
         }
 
-        private void RemoveLevel1Request(int scannerParameterId, string symbol)
+        private void RemoveLevel1Request(int scannerParameterId, Contract contract)
         {
-            lock (_level1RequestsBySymbol)
+            lock (_level1RequestsByContract)
             {
-                if (_level1RequestsBySymbol.TryGetValue(symbol, out var request))
+                if (_level1RequestsByContract.TryGetValue(contract, out var request))
                 {
                     if (request.TrySetOffline(scannerParameterId))
                     {
                         request.Stop();
-                        Logger.Info("Symbol: {0} is OFFLINE with Parameter: {1}", symbol, scannerParameterId);
+                        Logger.Info("Symbol: {0} is OFFLINE with Parameter: {1}", contract, scannerParameterId);
                     }
                 }
                 else
                 {
-                    Logger.Error($"Trying to remove unexisting Symbol: {symbol} on ScannerParameter: {scannerParameterId}");
+                    Logger.Error($"Trying to remove unexisting Symbol: {contract} on ScannerParameter: {scannerParameterId}");
                 }
             }
         }

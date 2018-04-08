@@ -95,24 +95,24 @@ namespace PT.MarketDataService.Core.Models
 
         public IEnumerable<ScannerChange> GetScannerChanges(Scanner current)
         {
-            var previousScannerRowsBySymbol = _previousScanner.Rows.ToDictionary(x => x.Symbol);
-            var scannerRowsBySymbol = current.Rows.ToDictionary(x => x.Symbol);
+            var previousScannerRowsByContract = _previousScanner.Rows.ToDictionary(x => x.Contract);
+            var scannerRowsByContract = current.Rows.ToDictionary(x => x.Contract);
 
             // Check for new
-            foreach (var symbol in scannerRowsBySymbol.Keys)
+            foreach (var contract in scannerRowsByContract.Keys)
             {
-                if (!previousScannerRowsBySymbol.ContainsKey(symbol))
+                if (!previousScannerRowsByContract.ContainsKey(contract))
                 {
-                    yield return new ScannerChange(ScannerChangeType.Added, symbol);
+                    yield return new ScannerChange(ScannerChangeType.Added, contract);
                 }
             }
 
             // Check for old
-            foreach (var symbol in previousScannerRowsBySymbol.Keys)
+            foreach (var contract in previousScannerRowsByContract.Keys)
             {
-                if (!scannerRowsBySymbol.ContainsKey(symbol))
+                if (!scannerRowsByContract.ContainsKey(contract))
                 {
-                    yield return new ScannerChange(ScannerChangeType.Removed, symbol);
+                    yield return new ScannerChange(ScannerChangeType.Removed, contract);
                 }
             }
 

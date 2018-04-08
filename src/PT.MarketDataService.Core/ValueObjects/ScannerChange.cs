@@ -1,16 +1,17 @@
-﻿using PT.MarketDataService.Core.Enums;
+﻿using PT.MarketDataService.Core.Entities;
+using PT.MarketDataService.Core.Enums;
 
 namespace PT.MarketDataService.Core.ValueObjects
 {
     public class ScannerChange
     {
-        public ScannerChange(ScannerChangeType type, string symbol)
+        public ScannerChange(ScannerChangeType type, Contract contract)
         {
             Type = type;
-            Symbol = symbol;
+            Contract = contract;
         }
 
         public ScannerChangeType Type { get; }
-        public string Symbol { get; }
+        public Contract Contract { get; }
     }
 }
