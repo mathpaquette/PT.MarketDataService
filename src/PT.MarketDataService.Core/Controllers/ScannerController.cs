@@ -51,7 +51,7 @@ namespace PT.MarketDataService.Core.Controllers
         {
             if (!request.IsOnline())
             {
-                Logger.Info("ScannerParameter: {0} is OFFLINE. Waking up on: {1}", request.Parameter.Id, _timeProvider.Now + request.UntilExpiration);
+                Logger.Info("ScannerParameter: {0} is OFFLINE. Scheduled on: {1}", request.Parameter.Id, _timeProvider.Now + request.UntilExpiration);
                 request.Signal();
                 NotifyScannerChanges(request, new Scanner());
                 return;
@@ -65,7 +65,7 @@ namespace PT.MarketDataService.Core.Controllers
             request.Signal();
 
             // Notify changes
-            NotifyScannerChanges(request, new Scanner());
+            NotifyScannerChanges(request, scanner);
 
             // save the to database
             PersistScanner(scanner, request.Parameter.Id);
@@ -73,9 +73,7 @@ namespace PT.MarketDataService.Core.Controllers
 
         private void NotifyScannerChanges(ScannerRequest request, Scanner current)
         {
-            // get changes from empty Scanner
             var scannerChanges = request.GetScannerChanges(current);
-
             ScannerChange.RaiseEvent(this, new ScannerChangeEventArgs(request.Parameter.Id, scannerChanges));
         }
 
