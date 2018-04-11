@@ -58,7 +58,7 @@ namespace PT.MarketDataService.Core.Controllers
             }
 
             // fetch the scanner from the market
-            Logger.Info("Requesting scanner for ScannerParameter : {0}...", request.Parameter.Id);
+            Logger.Info("Requesting scanner for ScannerParameter: {0}...", request.Parameter.Id);
             var scanner = await _marketDataProvider.GetScannerAsync(request.Parameter);
             Logger.Info("Received scanner for ScannerParameter: {0}", request.Parameter.Id);
 

@@ -78,14 +78,14 @@ namespace PT.MarketDataService.Core.Models
             get
             {
                 var now = _timeProvider.Now;
-                var next = now.Add(Frequency).TimeOfDay;
+                var time = now.TimeOfDay;
 
                 if (now.IsBusinessDay())
                 {
-                    if (next >= StartTime && next <= EndTime)
+                    if (time >= StartTime && time <= EndTime)
                         return Frequency;
 
-                    if (next < StartTime)
+                    if (time < StartTime)
                         return StartTime - now.TimeOfDay;
                 }
 
