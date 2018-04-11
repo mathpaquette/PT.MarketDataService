@@ -39,7 +39,7 @@ namespace PT.MarketDataService.Tests.Models
         [TestCase("2018-04-02 9:30:00")]
         [TestCase("2018-04-02 12:00:00")]
         [TestCase("2018-04-02 16:00:00")]
-        public void When_Time_Is_In_Range_And_Business_Day_IsOnline_Should_Return_True(DateTime now)
+        public void When_Time_Is_In_Range_And_Business_Day_TrySetOffline_Should_Return_False(DateTime now)
         {
             // Arrange
             var timeProvider = new Mock<ITimeProvider>();
@@ -49,12 +49,12 @@ namespace PT.MarketDataService.Tests.Models
             var scannerRequest = new ScannerRequest(new TimeSpan(9, 30, 0), new TimeSpan(16, 0, 0), 60, new ScannerParameter(), timeProvider.Object);
 
             // Assert
-            Assert.True(scannerRequest.IsOnline());
+            Assert.False(scannerRequest.TrySetOffline());
         }
 
         [TestCase("2018-04-02 9:29:59")]
         [TestCase("2018-04-02 16:00:01")]
-        public void When_Time_Is_Out_Of_Range_And_Business_Day_IsOnline_Should_Return_False(DateTime now)
+        public void When_Time_Is_Out_Of_Range_And_Business_Day_TrySetOffline_Should_Return_True(DateTime now)
         {
             // Arrange
             var timeProvider = new Mock<ITimeProvider>();
@@ -64,13 +64,13 @@ namespace PT.MarketDataService.Tests.Models
             var scannerRequest = new ScannerRequest(new TimeSpan(9, 30, 0), new TimeSpan(16, 0, 0), 60, new ScannerParameter(), timeProvider.Object);
 
             // Assert
-            Assert.False(scannerRequest.IsOnline());
+            Assert.True(scannerRequest.TrySetOffline());
         }
 
         [TestCase("2018-04-01 9:30:00")]
         [TestCase("2018-04-01 12:00:00")]
         [TestCase("2018-04-01 16:00:00")]
-        public void When_Time_Is_In_Range_And_Weekend_Day_IsOnline_Should_Return_True(DateTime now)
+        public void When_Time_Is_In_Range_And_Weekend_Day_TrySetOfflineShould_Return_False(DateTime now)
         {
             // Arrange
             var timeProvider = new Mock<ITimeProvider>();
@@ -80,7 +80,7 @@ namespace PT.MarketDataService.Tests.Models
             var scannerRequest = new ScannerRequest(new TimeSpan(9, 30, 0), new TimeSpan(16, 0, 0), 60, new ScannerParameter(), timeProvider.Object);
 
             // Assert
-            Assert.False(scannerRequest.IsOnline());
+            Assert.True(scannerRequest.TrySetOffline());
         }
     }
 }

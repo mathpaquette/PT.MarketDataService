@@ -49,7 +49,7 @@ namespace PT.MarketDataService.Core.Controllers
 
         private async Task ProcessRequest(ScannerRequest request)
         {
-            if (!request.IsOnline())
+            if (request.TrySetOffline())
             {
                 Logger.Info("ScannerParameter: {0} is OFFLINE. Scheduled on: {1}", request.Parameter.Id, _timeProvider.Now + request.UntilExpiration);
                 request.Signal();

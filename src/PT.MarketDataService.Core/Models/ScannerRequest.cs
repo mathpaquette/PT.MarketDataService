@@ -35,6 +35,8 @@ namespace PT.MarketDataService.Core.Models
             _previousScanner = new Scanner();
         }
 
+
+        public bool Online { get; private set; }
         public TimeSpan StartTime { get; }
         public TimeSpan EndTime { get; }
         public TimeSpan Frequency { get; }
@@ -42,15 +44,18 @@ namespace PT.MarketDataService.Core.Models
         public DateTime LastUpdate { get; private set; }
         public TimeSpan SinceLastUpdate => _timeProvider.Now - LastUpdate;
 
-        public bool IsOnline()
+        public bool TrySetOffline()
         {
             var now = _timeProvider.Now;
             if (now.TimeOfDay >= StartTime && now.TimeOfDay <= EndTime && now.IsBusinessDay())
             {
                 LastUpdate = now;
-                return true;
+                Online = true;
+                return false;
             }
-            return false;
+
+            Online = false;
+            return true;
         }
 
         public async void Start()
@@ -58,7 +63,8 @@ namespace PT.MarketDataService.Core.Models
             while (!_cts.IsCancellationRequested)
             {
                 await _semaphoreSlim.WaitAsync(_cts.Token).ContinueWith(task => { });
-                await Task.Delay(UntilExpiration, _cts.Token).ContinueWith(task => { });
+                var delay = Online ? Frequency : UntilExpiration;
+                await Task.Delay(delay, _cts.Token).ContinueWith(task => { });
                 Timeout.RaiseEvent(this, EventArgs.Empty);
             }
         }
@@ -78,14 +84,13 @@ namespace PT.MarketDataService.Core.Models
             get
             {
                 var now = _timeProvider.Now;
-                var time = now.TimeOfDay;
 
                 if (now.IsBusinessDay())
                 {
-                    if (time >= StartTime && time <= EndTime)
+                    if (now.TimeOfDay >= StartTime && now.TimeOfDay <= EndTime)
                         return Frequency;
 
-                    if (time < StartTime)
+                    if (now.TimeOfDay < StartTime)
                         return StartTime - now.TimeOfDay;
                 }
 
