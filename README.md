@@ -21,7 +21,7 @@ The overall architecture as been design respecting DDD practices.
 - [IB.CSharpApiClient](https://github.com/mathpaquette/IB.CSharpApiClient)
 - [TPL Dataflow](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/dataflow-task-parallel-library)
 - [SimpleInjector](https://github.com/simpleinjector/SimpleInjector)
-- [SharpRepository](https://github.com/SharpRepository/SharpRepository) with EF6 (Code First)
+- [Entity Framework 6](https://msdn.microsoft.com/en-us/library/aa937723(v=vs.113).aspx) (Code First with Unit of Work abstraction)
 - [Topshelf](https://github.com/Topshelf/Topshelf)
 - [NLog](https://github.com/NLog/NLog)
 <!-- - WebApi (OWIN) + SignalR -->

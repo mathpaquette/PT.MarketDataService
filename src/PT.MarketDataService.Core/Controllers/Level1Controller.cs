@@ -4,11 +4,9 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using NLog;
 using PT.MarketDataService.Core.DomainServices;
-using PT.MarketDataService.Core.Entities;
 using PT.MarketDataService.Core.Enums;
 using PT.MarketDataService.Core.Events;
 using PT.MarketDataService.Core.Models;
-using PT.MarketDataService.Core.Repositories;
 
 namespace PT.MarketDataService.Core.Controllers
 {
@@ -17,24 +15,24 @@ namespace PT.MarketDataService.Core.Controllers
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private readonly IMarketDataProvider _marketDataProvider;
+        private readonly ILevel1MarketDataService _level1MarketDataService;
         private readonly ScannerController _scannerController;
         private readonly Dictionary<string, Level1Request> _level1RequestsBySymbol;
         private readonly ActionBlock<Level1Request> _level1RequestQueue;
-        private readonly ILevel1MarketDataRepositoryFactory _level1MarketDataRepositoryFactory;
 
         private readonly int _level1RequestFrequency;
 
         public Level1Controller(
             IMarketDataProvider marketDataProvider,
+            ILevel1MarketDataService level1MarketDataService,
             ScannerController scannerController,
-            ILevel1MarketDataRepositoryFactory level1MarketDataRepositoryFactory,
             IAppConfig appConfig)
         {
-            _level1RequestFrequency = appConfig.Level1RequestFrequencySec;
-
-            _level1MarketDataRepositoryFactory = level1MarketDataRepositoryFactory;
-            _scannerController = scannerController;
             _marketDataProvider = marketDataProvider;
+            _level1MarketDataService = level1MarketDataService;
+            _scannerController = scannerController;
+
+            _level1RequestFrequency = appConfig.Level1RequestFrequencySec;
             _level1RequestsBySymbol = new Dictionary<string, Level1Request>();
 
             _level1RequestQueue = new ActionBlock<Level1Request>(
@@ -66,22 +64,7 @@ namespace PT.MarketDataService.Core.Controllers
             request.Signal();
 
             // persist the data
-            PersistData(level1MarketData);
-        }
-
-        private void PersistData(Level1MarketData level1MarketData)
-        {
-            try
-            {
-                using (var repo = _level1MarketDataRepositoryFactory.CreateNew())
-                {
-                    repo.Add(level1MarketData);
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-            }
+            _level1MarketDataService.PersistLevel1MarketData(level1MarketData);
         }
 
         private void ScannerControllerOnScannerChange(object sender, ScannerChangeEventArgs args)

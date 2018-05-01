@@ -9,7 +9,6 @@ using PT.MarketDataService.Core.Events;
 using PT.MarketDataService.Core.Extensions;
 using PT.MarketDataService.Core.Models;
 using PT.MarketDataService.Core.Providers;
-using PT.MarketDataService.Core.Repositories;
 
 namespace PT.MarketDataService.Core.Controllers
 {
@@ -21,20 +20,17 @@ namespace PT.MarketDataService.Core.Controllers
         
         private readonly ActionBlock<ScannerRequest> _scannerRequestsQueue;
         private readonly IMarketDataProvider _marketDataProvider;
-        private readonly IScannerRequestService _scannerRequestService;
-        private readonly IScannerRepositoryFactory _scannerRepositoryFactory;
+        private readonly IScannerService _scannerService;
         private readonly ITimeProvider _timeProvider;
 
 
         public ScannerController(
             IMarketDataProvider marketDataProvider,
-            IScannerRequestService scannerRequestService,
-            IScannerRepositoryFactory scannerRepositoryFactory,
+            IScannerService scannerService,
             ITimeProvider timeProvider)
         {
             _timeProvider = timeProvider;
-            _scannerRepositoryFactory = scannerRepositoryFactory;
-            _scannerRequestService = scannerRequestService;
+            _scannerService = scannerService;
             _marketDataProvider = marketDataProvider;
 
             _scannerRequestsQueue = new ActionBlock<ScannerRequest>(
@@ -68,7 +64,7 @@ namespace PT.MarketDataService.Core.Controllers
             NotifyScannerChanges(request, scanner);
 
             // save the to database
-            PersistScanner(scanner, request.Parameter.Id);
+            _scannerService.PersistScanner(scanner, request.Parameter.Id);
         }
 
         private void NotifyScannerChanges(ScannerRequest request, Scanner current)
@@ -77,25 +73,9 @@ namespace PT.MarketDataService.Core.Controllers
             ScannerChange.RaiseEvent(this, new ScannerChangeEventArgs(request.Parameter.Id, scannerChanges));
         }
 
-        private void PersistScanner(Scanner scanner, int scannerParamId)
-        {
-            using (var scannerRepository = _scannerRepositoryFactory.CreateNew())
-            {
-                try
-                {
-                    scanner.ParameterId = scannerParamId;
-                    scannerRepository.Add(scanner);
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e);
-                }
-            }
-        }
-
         private void InitializeScannerRequests()
         {
-            var scannerRequests = _scannerRequestService.GetScannerRequests().ToList();
+            var scannerRequests = _scannerService.GetScannerRequests().ToList();
             foreach (var scannerRequest in scannerRequests)
             {
                 scannerRequest.Timeout += ScannerRequestOnTimeout;

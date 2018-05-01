@@ -13,7 +13,8 @@ namespace PT.MarketDataService.Core
             container.Register<ScannerController>(Lifestyle.Singleton);
             container.Register<Level1Controller>(Lifestyle.Singleton);
             container.Register<ITimeProvider, DefaultTimeProvider>(Lifestyle.Singleton);
-            container.Register<IScannerRequestService, ScannerRequestService>();
+            container.Register<IScannerService, ScannerService>();
+            container.Register<ILevel1MarketDataService, Level1MarketDataService>();
         }
     }
 }

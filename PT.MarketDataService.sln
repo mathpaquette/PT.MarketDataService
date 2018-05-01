@@ -17,7 +17,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PT.MarketDataService.Tests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PT.MarketDataService.Tests.Integration", "src\PT.MarketDataService.Tests.Integration\PT.MarketDataService.Tests.Integration.csproj", "{D7DDECAC-688F-480A-BA62-995D719F2F24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PT.MarketDataService.Repository.EF", "src\PT.MarketDataService.Repository.EF\PT.MarketDataService.Repository.EF.csproj", "{6E701817-D507-465E-BC3B-A334DEC212C5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PT.Common.Repository", "src\PT.Common.Repository\PT.Common.Repository.csproj", "{96A8AFA1-6EE0-4529-8C55-10494430B97B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PT.Common.Repository.EfRepository", "src\PT.Common.Repository.EfRepository\PT.Common.Repository.EfRepository.csproj", "{5B104120-27F9-41E9-8766-598CBB990DE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PT.MarketDataService.Repository.EfRepository", "src\PT.MarketDataService.Repository.EfRepository\PT.MarketDataService.Repository.EfRepository.csproj", "{6E701817-D507-465E-BC3B-A334DEC212C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +53,14 @@ Global
 		{D7DDECAC-688F-480A-BA62-995D719F2F24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7DDECAC-688F-480A-BA62-995D719F2F24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7DDECAC-688F-480A-BA62-995D719F2F24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96A8AFA1-6EE0-4529-8C55-10494430B97B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96A8AFA1-6EE0-4529-8C55-10494430B97B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96A8AFA1-6EE0-4529-8C55-10494430B97B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96A8AFA1-6EE0-4529-8C55-10494430B97B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B104120-27F9-41E9-8766-598CBB990DE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B104120-27F9-41E9-8766-598CBB990DE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B104120-27F9-41E9-8766-598CBB990DE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B104120-27F9-41E9-8766-598CBB990DE6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6E701817-D507-465E-BC3B-A334DEC212C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6E701817-D507-465E-BC3B-A334DEC212C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E701817-D507-465E-BC3B-A334DEC212C5}.Release|Any CPU.ActiveCfg = Release|Any CPU

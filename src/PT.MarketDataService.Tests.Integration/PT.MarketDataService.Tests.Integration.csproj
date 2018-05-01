@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\NUnit.3.10.1\build\NUnit.props" Condition="Exists('..\..\packages\NUnit.3.10.1\build\NUnit.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -11,6 +12,8 @@
     <AssemblyName>PT.MarketDataService.Tests.Integration</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,7 +33,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.10.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NUnit.3.10.1\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector, Version=4.2.2.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SimpleInjector.4.2.2\lib\net45\SimpleInjector.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -41,6 +57,51 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\EfRepositoryTests.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\PT.Common.Repository.EfRepository\PT.Common.Repository.EfRepository.csproj">
+      <Project>{5b104120-27f9-41e9-8766-598cbb990de6}</Project>
+      <Name>PT.Common.Repository.EfRepository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PT.Common.Repository\PT.Common.Repository.csproj">
+      <Project>{96a8afa1-6ee0-4529-8c55-10494430b97b}</Project>
+      <Name>PT.Common.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PT.MarketDataService.Application\PT.MarketDataService.Application.csproj">
+      <Project>{60cc88ab-6801-42de-ab06-3e8c889f5263}</Project>
+      <Name>PT.MarketDataService.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PT.MarketDataService.Core\PT.MarketDataService.Core.csproj">
+      <Project>{e0017f1f-4837-4958-9837-8d1587a098fe}</Project>
+      <Name>PT.MarketDataService.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PT.MarketDataService.Infrastructure\PT.MarketDataService.Infrastructure.csproj">
+      <Project>{47968734-4dcf-4116-89d9-3fe39132f289}</Project>
+      <Name>PT.MarketDataService.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PT.MarketDataService.Repository.EfRepository\PT.MarketDataService.Repository.EfRepository.csproj">
+      <Project>{6e701817-d507-465e-bc3b-a334dec212c5}</Project>
+      <Name>PT.MarketDataService.Repository.EfRepository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PT.MarketDataService.Topshelf\PT.MarketDataService.Topshelf.csproj">
+      <Project>{6adff884-ef53-4cb3-80a1-5ecc08e58f88}</Project>
+      <Name>PT.MarketDataService.Topshelf</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\NUnit.3.10.1\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NUnit.3.10.1\build\NUnit.props'))" />
+  </Target>
 </Project>
