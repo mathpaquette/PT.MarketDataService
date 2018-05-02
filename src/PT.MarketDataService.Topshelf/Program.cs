@@ -1,12 +1,18 @@
 ﻿using System;
+using NLog;
 using Topshelf;
 
 namespace PT.MarketDataService.Topshelf
 {
     public class Program
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public static void Main()
         {
+            var currentDomain = AppDomain.CurrentDomain;
+            currentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+
             var bootstrapper = new Bootstrapper();
             bootstrapper.Initialize();
 
@@ -28,6 +34,12 @@ namespace PT.MarketDataService.Topshelf
 
             var exitCode = (int)Convert.ChangeType(rc, rc.GetTypeCode());
             Environment.ExitCode = exitCode;
+        }
+
+        private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs args)
+        {
+            var e = (Exception)args.ExceptionObject;
+            Logger.Error(e);
         }
     }
 }
