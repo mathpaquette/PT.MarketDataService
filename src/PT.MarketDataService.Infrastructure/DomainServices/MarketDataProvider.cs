@@ -58,7 +58,7 @@ namespace PT.MarketDataService.Infrastructure.DomainServices
             EventHandler<ScannerEndEventArgs> scannerEnd = (sender, args) =>
             {
                 if (args.RequestId != reqId) return;
-                res.SetResult(ibScanner);
+                res.TrySetResult(ibScanner);
             };
             EventDispatcher.Scanner += scanner;
             EventDispatcher.ScannerEnd += scannerEnd;
@@ -97,7 +97,7 @@ namespace PT.MarketDataService.Infrastructure.DomainServices
                 level1MarketData.SetTickSizeValue(args.Field, args.Size);
 
                 if (level1MarketData.Completed())
-                    res.SetResult(level1MarketData);
+                    res.TrySetResult(level1MarketData);
             };
 
             EventHandler<TickPriceEventArgs> tickPrice = (sender, args) =>
@@ -108,7 +108,7 @@ namespace PT.MarketDataService.Infrastructure.DomainServices
                 level1MarketData.SetTickPriceValue(args.Field, args.Price);
 
                 if (level1MarketData.Completed())
-                    res.SetResult(level1MarketData);
+                    res.TrySetResult(level1MarketData);
             };
 
             EventDispatcher.TickSize += tickSize;
