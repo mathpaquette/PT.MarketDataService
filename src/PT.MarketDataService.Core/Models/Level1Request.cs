@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using PT.MarketDataService.Core.Extensions;
+using PT.MarketDataService.Core.Providers;
 
 namespace PT.MarketDataService.Core.Models
 {
@@ -10,14 +11,18 @@ namespace PT.MarketDataService.Core.Models
     {
         public event EventHandler Timeout;
 
+        private static readonly TimeSpan RoundUpTs = TimeSpan.FromSeconds(1);
+
         private CancellationTokenSource _cts;
         private SemaphoreSlim _semaphoreSlim;
 
         private readonly HashSet<int> _scannerParameterIds;
         private readonly object _mutex = new Object();
+        private readonly ITimeProvider _timeProvider;
 
-        public Level1Request(string symbol, int frequency)
+        public Level1Request(string symbol, int frequency, ITimeProvider timeProvider)
         {
+            _timeProvider = timeProvider;
             Symbol = symbol;
             Frequency = TimeSpan.FromSeconds(frequency);
             _scannerParameterIds = new HashSet<int>();
@@ -29,10 +34,10 @@ namespace PT.MarketDataService.Core.Models
 
         public bool HasExpired()
         {
+            var now = _timeProvider.Now;
             lock (_mutex)
             {
-                var now = DateTime.Now;
-                if (now.Subtract(LastUpdate) >= Frequency)
+                if (now.Subtract(LastUpdate).RoundUp(RoundUpTs) >= Frequency)
                 {
                     LastUpdate = now;
                     return true;
@@ -70,11 +75,11 @@ namespace PT.MarketDataService.Core.Models
             _semaphoreSlim.Release();
         }
 
-        private TimeSpan UntilExpiration
+        public TimeSpan UntilExpiration
         {
             get
             {
-                var diff = DateTime.Now.Subtract(LastUpdate);
+                var diff = _timeProvider.Now.Subtract(LastUpdate);
                 return diff >= Frequency ? Frequency : Frequency - diff;
             }
         }

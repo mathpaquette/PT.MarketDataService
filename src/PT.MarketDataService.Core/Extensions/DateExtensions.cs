@@ -19,5 +19,10 @@ namespace PT.MarketDataService.Core.Extensions
 
             return new DateTime(date.Year, date.Month, date.Day);
         }
+
+        public static TimeSpan RoundUp(this TimeSpan ts, TimeSpan d)
+        {
+            return new TimeSpan((ts.Ticks + d.Ticks - 1) / d.Ticks * d.Ticks);
+        }
     }
 }

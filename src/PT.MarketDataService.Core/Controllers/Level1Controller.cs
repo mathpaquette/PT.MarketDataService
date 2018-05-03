@@ -6,6 +6,7 @@ using NLog;
 using PT.MarketDataService.Core.DomainServices;
 using PT.MarketDataService.Core.Enums;
 using PT.MarketDataService.Core.Events;
+using PT.MarketDataService.Core.Factories;
 using PT.MarketDataService.Core.Models;
 
 namespace PT.MarketDataService.Core.Controllers
@@ -19,20 +20,19 @@ namespace PT.MarketDataService.Core.Controllers
         private readonly ScannerController _scannerController;
         private readonly Dictionary<string, Level1Request> _level1RequestsBySymbol;
         private readonly ActionBlock<Level1Request> _level1RequestQueue;
-
-        private readonly int _level1RequestFrequency;
+        private readonly ILevel1RequestFactory _level1RequestFactory;
 
         public Level1Controller(
             IMarketDataProvider marketDataProvider,
             ILevel1MarketDataService level1MarketDataService,
-            ScannerController scannerController,
-            IAppConfig appConfig)
+            ILevel1RequestFactory level1RequestFactory,
+            ScannerController scannerController)
         {
+            _level1RequestFactory = level1RequestFactory;
             _marketDataProvider = marketDataProvider;
             _level1MarketDataService = level1MarketDataService;
             _scannerController = scannerController;
 
-            _level1RequestFrequency = appConfig.Level1RequestFrequencySec;
             _level1RequestsBySymbol = new Dictionary<string, Level1Request>();
 
             _level1RequestQueue = new ActionBlock<Level1Request>(
@@ -52,7 +52,8 @@ namespace PT.MarketDataService.Core.Controllers
 
             if (!request.HasExpired())
             {
-                Logger.Info("Not expired level 1 request for Symbol: {0}... ({1})", request.Symbol, _level1RequestQueue.InputCount);
+                Logger.Info("Not expired level 1 request for Symbol: {0}... ({1}), Until next expiration: {2} ms", 
+                    request.Symbol, _level1RequestQueue.InputCount, request.UntilExpiration.TotalMilliseconds);
                 request.Signal();
                 return;
             }
@@ -89,7 +90,7 @@ namespace PT.MarketDataService.Core.Controllers
             {
                 if (!_level1RequestsBySymbol.TryGetValue(symbol, out var request))
                 {
-                    request = new Level1Request(symbol, _level1RequestFrequency);
+                    request = _level1RequestFactory.CreateNew(symbol);
                     request.Timeout += RequestOnTimeout;
                     _level1RequestsBySymbol.Add(symbol, request);
                 }

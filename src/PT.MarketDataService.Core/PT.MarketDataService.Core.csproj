@@ -70,6 +70,8 @@
     <Compile Include="Extensions\DateExtensions.cs" />
     <Compile Include="Extensions\EventExtentions.cs" />
     <Compile Include="Controllers\ScannerController.cs" />
+    <Compile Include="Factories\ILevel1RequestFactory.cs" />
+    <Compile Include="Factories\Level1RequestFactory.cs" />
     <Compile Include="Models\Level1Request.cs" />
     <Compile Include="Models\ScannerRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
