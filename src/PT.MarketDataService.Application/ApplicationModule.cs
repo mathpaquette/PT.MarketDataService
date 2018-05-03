@@ -7,7 +7,7 @@ namespace PT.MarketDataService.Application
     {
         public void RegisterServices(Container container)
         {
-            
+
         }
     }
 }

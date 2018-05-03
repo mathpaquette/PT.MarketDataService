@@ -11,11 +11,15 @@ namespace PT.MarketDataService.Infrastructure.DomainServices
             IbPort = int.Parse(ConfigurationManager.AppSettings["IbPort"]);
             IbClientId = int.Parse(ConfigurationManager.AppSettings["IbClientId"]);
             Level1RequestFrequencySec = int.Parse(ConfigurationManager.AppSettings["Level1RequestFrequencySec"]);
+            EnableMarketDataCollector = bool.Parse(ConfigurationManager.AppSettings["EnableMarketDataCollector"]);
+            EnableWebApi = bool.Parse(ConfigurationManager.AppSettings["EnableWebApi"]);
         }
 
         public string IbHost { get; }
         public int IbPort { get; }
         public int IbClientId { get; }
         public int Level1RequestFrequencySec { get; }
+        public bool EnableMarketDataCollector { get; }
+        public bool EnableWebApi { get; }
     }
 }

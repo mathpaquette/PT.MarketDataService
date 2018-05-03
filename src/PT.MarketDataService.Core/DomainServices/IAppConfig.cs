@@ -6,5 +6,7 @@
         int IbPort { get; }
         int IbClientId { get; }
         int Level1RequestFrequencySec { get; }
+        bool EnableMarketDataCollector { get; }
+        bool EnableWebApi { get; }
     }
 }
