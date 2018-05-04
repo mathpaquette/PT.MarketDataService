@@ -49,7 +49,7 @@ namespace PT.MarketDataService.Core.Controllers
             {
                 Logger.Info("ScannerParameter: {0} is OFFLINE. Scheduled on: {1}", request.Parameter.Id, _timeProvider.Now + request.UntilExpiration);
                 request.Signal();
-                NotifyScannerChanges(request, new Scanner());
+                NotifyScannerChanges(request, new Scanner(), false);
                 return;
             }
 
@@ -61,16 +61,16 @@ namespace PT.MarketDataService.Core.Controllers
             request.Signal();
 
             // Notify changes
-            NotifyScannerChanges(request, scanner);
+            NotifyScannerChanges(request, scanner, true);
 
             // save the to database
             _scannerService.PersistScanner(scanner, request.Parameter.Id);
         }
 
-        private void NotifyScannerChanges(ScannerRequest request, Scanner current)
+        private void NotifyScannerChanges(ScannerRequest request, Scanner current, bool scannerOnline)
         {
             var scannerChanges = request.GetScannerChanges(current);
-            ScannerChange.RaiseEvent(this, new ScannerChangeEventArgs(request.Parameter.Id, scannerChanges));
+            ScannerChange.RaiseEvent(this, new ScannerChangeEventArgs(request.Parameter.Id, scannerChanges, scannerOnline));
         }
 
         private void InitializeScannerRequests()

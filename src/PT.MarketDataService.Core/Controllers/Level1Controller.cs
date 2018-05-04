@@ -78,7 +78,7 @@ namespace PT.MarketDataService.Core.Controllers
                         CreateLevel1Request(args.ScannerParameterId, scannerChange.Symbol);
                         break;
                     case ScannerChangeType.Removed:
-                        RemoveLevel1Request(args.ScannerParameterId, scannerChange.Symbol);
+                        RemoveLevel1Request(args.ScannerParameterId, scannerChange.Symbol, args.ScannerOnline);
                         break;
                 }
             }
@@ -104,7 +104,7 @@ namespace PT.MarketDataService.Core.Controllers
             }
         }
 
-        private void RemoveLevel1Request(int scannerParameterId, string symbol)
+        private void RemoveLevel1Request(int scannerParameterId, string symbol, bool scannerOnline)
         {
             lock (_level1RequestsBySymbol)
             {
@@ -114,6 +114,13 @@ namespace PT.MarketDataService.Core.Controllers
                     {
                         request.Stop();
                         Logger.Info("Symbol: {0} is OFFLINE with Parameter: {1}", symbol, scannerParameterId);
+
+                        if (!scannerOnline)
+                        {
+                            request.Timeout -= RequestOnTimeout;
+                            _level1RequestsBySymbol.Remove(symbol);
+                            Logger.Info("Symbol: {0} is completely OFFLINE ({1})", symbol, _level1RequestsBySymbol.Count);
+                        }
                     }
                 }
                 else

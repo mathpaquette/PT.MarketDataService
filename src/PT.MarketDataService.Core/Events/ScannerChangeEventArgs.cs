@@ -6,13 +6,15 @@ namespace PT.MarketDataService.Core.Events
 {
     public class ScannerChangeEventArgs : EventArgs
     {
-        public int ScannerParameterId { get; set; }
+        public int ScannerParameterId { get; }
+        public bool ScannerOnline { get; }
         public IEnumerable<ScannerChange> ScannerChanges { get; }
 
-        public ScannerChangeEventArgs(int scannerParameterId, IEnumerable<ScannerChange> scannerChanges)
+        public ScannerChangeEventArgs(int scannerParameterId, IEnumerable<ScannerChange> scannerChanges, bool scannerOnline)
         {
             ScannerParameterId = scannerParameterId;
             ScannerChanges = scannerChanges;
+            ScannerOnline = scannerOnline;
         }
     }
 }
