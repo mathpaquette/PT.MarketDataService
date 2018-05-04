@@ -4,6 +4,7 @@ using Owin;
 using SimpleInjector;
 using SimpleInjector.Integration.WebApi;
 using SimpleInjector.Lifestyles;
+using Swashbuckle.Application;
 
 namespace PT.MarketDataService.Application.Owin
 {
@@ -21,7 +22,8 @@ namespace PT.MarketDataService.Application.Owin
         {
             var server = WebApp.Start(baseAddress, (appBuilder) =>
             {
-                appBuilder.Use(async (context, next) => {
+                appBuilder.Use(async (context, next) =>
+                {
                     using (AsyncScopedLifestyle.BeginScope(_container))
                     {
                         await next();
@@ -36,6 +38,11 @@ namespace PT.MarketDataService.Application.Owin
                     defaults: new { id = RouteParameter.Optional }
                 );
 
+                // Swashbuckle
+                config.EnableSwagger(c => c.SingleApiVersion("v1", "MarketDataService API"))
+                      .EnableSwaggerUi();
+
+                // SimpleInjector
                 config.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(_container);
 
                 appBuilder.UseWebApi(config);
