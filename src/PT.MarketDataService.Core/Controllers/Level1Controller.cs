@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using NLog;
@@ -78,8 +79,30 @@ namespace PT.MarketDataService.Core.Controllers
                         CreateLevel1Request(args.ScannerParameterId, scannerChange.Symbol);
                         break;
                     case ScannerChangeType.Removed:
-                        RemoveLevel1Request(args.ScannerParameterId, scannerChange.Symbol, args.ScannerOnline);
+                        RemoveLevel1Request(args.ScannerParameterId, scannerChange.Symbol);
                         break;
+                }
+            }
+
+            if (!args.ScannerOnline)
+            {
+                CleanUpLevel1Request();
+            }
+        }
+
+        private void CleanUpLevel1Request()
+        {
+            lock (_level1RequestsBySymbol)
+            {
+                var requests = _level1RequestsBySymbol.Values.ToList();
+                foreach (var request in requests)
+                {
+                    if (request.Online)
+                        continue;
+
+                    request.Timeout -= RequestOnTimeout;
+                    _level1RequestsBySymbol.Remove(request.Symbol);
+                    Logger.Info("Symbol: {0} is completely OFFLINE ({1})", request.Symbol, _level1RequestsBySymbol.Count);
                 }
             }
         }
@@ -104,7 +127,7 @@ namespace PT.MarketDataService.Core.Controllers
             }
         }
 
-        private void RemoveLevel1Request(int scannerParameterId, string symbol, bool scannerOnline)
+        private void RemoveLevel1Request(int scannerParameterId, string symbol)
         {
             lock (_level1RequestsBySymbol)
             {
@@ -114,13 +137,6 @@ namespace PT.MarketDataService.Core.Controllers
                     {
                         request.Stop();
                         Logger.Info("Symbol: {0} is OFFLINE with Parameter: {1}", symbol, scannerParameterId);
-
-                        if (!scannerOnline)
-                        {
-                            request.Timeout -= RequestOnTimeout;
-                            _level1RequestsBySymbol.Remove(symbol);
-                            Logger.Info("Symbol: {0} is completely OFFLINE ({1})", symbol, _level1RequestsBySymbol.Count);
-                        }
                     }
                 }
                 else
