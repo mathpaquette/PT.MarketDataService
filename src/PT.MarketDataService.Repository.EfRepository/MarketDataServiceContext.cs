@@ -1,6 +1,7 @@
 ﻿using System.Data.Entity;
 using PT.MarketDataService.Core.Entities;
 using PT.MarketDataService.Repository.EfRepository.Mappings;
+using PT.MarketDataService.Repository.EfRepository.Migrations;
 
 namespace PT.MarketDataService.Repository.EfRepository
 {
@@ -8,7 +9,7 @@ namespace PT.MarketDataService.Repository.EfRepository
     {
         public MarketDataServiceContext() : base("name=DefaultConnection")
         {
-            Database.SetInitializer(new DefaultInitializer());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<MarketDataServiceContext, Configuration>());
         }
 
         public DbSet<Level1MarketData> Level1MarketDatas { get; set; }

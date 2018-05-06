@@ -1,30 +1,20 @@
-﻿using System.Data.Entity;
-using PT.MarketDataService.Core;
+﻿using PT.MarketDataService.Core;
 using PT.MarketDataService.Core.Entities;
 
-namespace PT.MarketDataService.Repository.EfRepository
+namespace PT.MarketDataService.Repository.EfRepository.Seeds
 {
-    public class DefaultInitializer : CreateDatabaseIfNotExists<MarketDataServiceContext>
+    public static class OptVolumeMostActiveScannerConfigSeed
     {
         private const string MostActiveOption = "OPT_VOLUME_MOST_ACTIVE";
 
-        protected override void Seed(MarketDataServiceContext context)
-        {
-            var optVolumeMostActiveScannerConfig = GetOptVolumeMostActiveScannerConfig();
-            var preMarketScannerConfig = GetPreMarketMostActiveScannerConfig();
-            var afterMarketScannerConfig = GetAfterMarketMostActiveScannerConfig();
-
-            context.ScannerConfigs.Add(optVolumeMostActiveScannerConfig);
-            context.SaveChanges();
-            base.Seed(context);
-        }
-
-        private ScannerConfig GetOptVolumeMostActiveScannerConfig()
+        public static ScannerConfig GetOptVolumeMostActiveScannerConfig()
         {
             double[] prices = { 0, 7, 14, 21, 28, 35, 42, 49, 56, 63, 70, 82, 103, 124, 194, 264 };
 
             var scannerConfig = new ScannerConfig()
             {
+                Id = 1,
+                Enable = true,
                 StartTime = Exchange.MarketOpenHour,
                 EndTime = Exchange.MarketCloseHour,
                 Frequency = 60
@@ -50,18 +40,6 @@ namespace PT.MarketDataService.Repository.EfRepository
             }
 
             return scannerConfig;
-        }
-
-        // TODO: implement this one
-        private ScannerConfig GetPreMarketMostActiveScannerConfig()
-        {
-            return null;
-        }
-
-        // TODO: implement this one
-        private ScannerConfig GetAfterMarketMostActiveScannerConfig()
-        {
-            return null;
         }
     }
 }

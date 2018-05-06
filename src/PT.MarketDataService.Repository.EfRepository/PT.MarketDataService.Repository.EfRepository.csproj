@@ -55,16 +55,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DefaultInitializer.cs" />
     <Compile Include="Mappings\Level1MarketDataMap.cs" />
     <Compile Include="Mappings\ScannerConfigMap.cs" />
     <Compile Include="Mappings\ScannerParameterMap.cs" />
     <Compile Include="Mappings\ScannerMap.cs" />
     <Compile Include="Mappings\ScannerRowMap.cs" />
     <Compile Include="MarketDataServiceContext.cs" />
+    <Compile Include="Migrations\201805061109506_InitialCreate.cs" />
+    <Compile Include="Migrations\201805061109506_InitialCreate.Designer.cs">
+      <DependentUpon>201805061109506_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ScannerConfigRepository.cs" />
     <Compile Include="RepositoryModule.cs" />
+    <Compile Include="Seeds\OptVolumeMostActiveScannerConfigSeed.cs" />
     <Compile Include="UnitOfWork.cs" />
     <Compile Include="UnitOfWorkFactory.cs" />
   </ItemGroup>
@@ -88,6 +93,10 @@
       <Name>PT.MarketDataService.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201805061109506_InitialCreate.resx">
+      <DependentUpon>201805061109506_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
