@@ -4,8 +4,6 @@ namespace PT.MarketDataService.Core.Entities
 {
     public class Level1MarketData
     {
-        public int Id { get; set; }
-
         public DateTime Timestamp { get; set; }
         public string Symbol { get; set; }
 

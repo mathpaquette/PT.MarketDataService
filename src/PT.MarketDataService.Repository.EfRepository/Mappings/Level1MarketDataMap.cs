@@ -10,7 +10,9 @@ namespace PT.MarketDataService.Repository.EfRepository.Mappings
             ToTable("Level1MarketDatas");
 
             // key
-            HasKey(t => t.Id);
+            HasKey(t => new { t.Timestamp, t.Symbol });
+
+            Property(x => x.Symbol).HasMaxLength(8);
         }
     }
 }

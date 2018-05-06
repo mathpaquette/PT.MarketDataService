@@ -11,6 +11,10 @@ namespace PT.MarketDataService.Repository.EfRepository.Mappings
 
             // key
             HasKey(t => t.Id);
+
+            Property(x => x.Symbol).HasMaxLength(8);
+
+            HasIndex(i => i.Symbol);
         }
     }
 }

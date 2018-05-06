@@ -15,6 +15,8 @@ namespace PT.MarketDataService.Repository.EfRepository.Mappings
             HasMany(s => s.Rows)
                 .WithRequired(r => r.Scanner)
                 .HasForeignKey(r => r.ScannerId);
+
+            HasIndex(i => i.Timestamp);
         }
     }
 }
