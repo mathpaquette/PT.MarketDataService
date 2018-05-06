@@ -9,7 +9,7 @@ namespace PT.Common.Repository.EfRepository
     public class EfRepository<TEntity, TKey> : IRepository<TEntity, TKey> where TEntity : class
     {
         protected DbContext Context;
-        protected DbSet DbSet;
+        protected IDbSet<TEntity> DbSet;
 
         public EfRepository(DbContext context)
         {
@@ -18,7 +18,7 @@ namespace PT.Common.Repository.EfRepository
 
         public virtual void Add(TEntity entity)
         {
-            Context.Set<TEntity>().Add(entity);
+            DbSet.Add(entity);
         }
 
         public virtual void AddRange(IEnumerable<TEntity> entities)
@@ -26,24 +26,24 @@ namespace PT.Common.Repository.EfRepository
             Context.Set<TEntity>().AddRange(entities);
         }
 
-        public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
+        public virtual IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
         {
-            return Context.Set<TEntity>().Where(predicate);
+            return DbSet.Where(predicate);
         }
 
-        public TEntity Get(TKey id)
+        public virtual TEntity Get(TKey id)
         {
-            return Context.Set<TEntity>().Find(id);
+            return DbSet.Find(id);
         }
 
-        public IEnumerable<TEntity> GetAll()
+        public virtual IEnumerable<TEntity> GetAll()
         {
-            return Context.Set<TEntity>().ToList();
+            return DbSet.ToList();
         }
 
         public virtual void Remove(TEntity entity)
         {
-            Context.Set<TEntity>().Remove(entity);
+            DbSet.Remove(entity);
         }
 
         public virtual void RemoveRange(IEnumerable<TEntity> entities)

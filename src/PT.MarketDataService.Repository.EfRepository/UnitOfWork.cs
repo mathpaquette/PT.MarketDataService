@@ -33,7 +33,9 @@ namespace PT.MarketDataService.Repository.EfRepository
                              .GetInterfaces()
                              .Any(x => x.IsGenericType &&
                                        x.GetGenericTypeDefinition() == typeof(IRepository<>) || 
-                                       x.GetGenericTypeDefinition() == typeof(IRepository<,>));
+                                       x.GetGenericTypeDefinition() == typeof(IRepository<,>) ||
+                                       x.GetGenericTypeDefinition() == typeof(ICompoundKeyRepository<,,>) ||
+                                       x.GetGenericTypeDefinition() == typeof(ICompoundKeyRepository<,,,>));
             if (!isRepository)
                 throw new NotSupportedException("Requested instance isn't a repository");
 
