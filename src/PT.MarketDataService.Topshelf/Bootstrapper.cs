@@ -18,7 +18,9 @@ namespace PT.MarketDataService.Topshelf
         {
             // Default
             Container.Options.SuppressLifestyleMismatchVerification = true;
-            Container.Options.DefaultScopedLifestyle = new ThreadScopedLifestyle();
+            Container.Options.DefaultScopedLifestyle = Lifestyle.CreateHybrid(
+                defaultLifestyle: new ThreadScopedLifestyle(),
+                fallbackLifestyle: new AsyncScopedLifestyle());
 
             // Register modules dynamically
             Assembly.Load("PT.MarketDataService.Application");

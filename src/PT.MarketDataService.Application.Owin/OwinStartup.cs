@@ -29,14 +29,11 @@ namespace PT.MarketDataService.Application.Owin
                         await next();
                     }
                 });
-
                 // Configure Web API for self-host. 
                 HttpConfiguration config = new HttpConfiguration();
-                config.Routes.MapHttpRoute(
-                    name: "DefaultApi",
-                    routeTemplate: "api/{controller}/{id}",
-                    defaults: new { id = RouteParameter.Optional }
-                );
+
+                // Attribute routing.
+                config.MapHttpAttributeRoutes();
 
                 // Swashbuckle
                 config.EnableSwagger(c => c.SingleApiVersion("v1", "MarketDataService API"))

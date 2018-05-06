@@ -55,16 +55,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationModule.cs" />
+    <Compile Include="AppServices\ScannerAppService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="AppServices\" />
     <Folder Include="Dtos\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PT.Common.Repository\PT.Common.Repository.csproj">
+      <Project>{96a8afa1-6ee0-4529-8c55-10494430b97b}</Project>
+      <Name>PT.Common.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PT.MarketDataService.Core\PT.MarketDataService.Core.csproj">
+      <Project>{e0017f1f-4837-4958-9837-8d1587a098fe}</Project>
+      <Name>PT.MarketDataService.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

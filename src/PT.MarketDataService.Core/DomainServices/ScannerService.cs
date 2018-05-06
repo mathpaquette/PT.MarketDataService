@@ -60,6 +60,5 @@ namespace PT.MarketDataService.Core.DomainServices
                 }
             }
         }
-
     }
 }
