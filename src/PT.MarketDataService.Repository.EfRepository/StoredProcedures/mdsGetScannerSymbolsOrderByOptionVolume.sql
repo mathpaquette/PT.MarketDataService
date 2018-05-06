@@ -6,8 +6,7 @@ BEGIN
 
 SET NOCOUNT ON;
 
-SELECT s.Timestamp
-	,l1.Symbol
+SELECT sr.Symbol
 	,l1.CallVolume + l1.PutVolume AS OptionVolume
 FROM (
 	SELECT *
@@ -16,16 +15,17 @@ FROM (
 			) AS Rn
 	FROM scanners
 	WHERE Timestamp <= @CurrentTimestamp
-		AND Timestamp >= @CurrentTimestamp - CAST(@MaxTimeOffset AS DATETIME)
+		AND CAST(Timestamp AS DATE) = Cast(@CurrentTimestamp AS DATE)
 	) s
 INNER JOIN ScannerRows sr ON sr.ScannerId = s.Id
-CROSS APPLY (
+OUTER APPLY (
 	SELECT TOP 1 *
 	FROM Level1MarketDatas
-	WHERE Symbol = sr.Symbol
-		AND Timestamp <= s.Timestamp
-	ORDER BY Timestamp DESC
-	) l1
+	WHERE Level1MarketDatas.Symbol = sr.Symbol
+		AND Level1MarketDatas.Timestamp <= s.Timestamp
+		AND Timestamp >= @CurrentTimestamp - CAST(@MaxTimeOffset AS DATETIME)
+	ORDER BY Level1MarketDatas.Timestamp DESC
+	) AS l1
 WHERE Rn = 1
 ORDER BY OptionVolume DESC
 
