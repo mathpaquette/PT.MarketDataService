@@ -22,6 +22,7 @@ namespace PT.MarketDataService.Topshelf
 
             // Register modules dynamically
             Assembly.Load("PT.MarketDataService.Application");
+            Assembly.Load("PT.MarketDataService.Application.Owin");
             Assembly.Load("PT.MarketDataService.Core");
             Assembly.Load("PT.MarketDataService.Repository.EfRepository");
             Assembly.Load("PT.MarketDataService.Infrastructure");
