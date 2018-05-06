@@ -19,6 +19,7 @@ namespace PT.MarketDataService.Repository.EfRepository
 
             // custom repositories
             container.Register<IScannerConfigRepository, ScannerConfigRepository>();
+            container.Register<IScannerRepository, ScannerRepository>();
         }
     }
 }

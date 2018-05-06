@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\EfRepositoryTests.cs" />
+    <Compile Include="Repositories\ScannerRepositoryTests.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

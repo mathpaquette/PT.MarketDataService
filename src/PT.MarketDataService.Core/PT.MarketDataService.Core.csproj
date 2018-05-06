@@ -78,7 +78,9 @@
     <Compile Include="Providers\DefaultTimeProvider.cs" />
     <Compile Include="Providers\ITimeProvider.cs" />
     <Compile Include="Repositories\IScannerConfigRepository.cs" />
+    <Compile Include="Repositories\IScannerRepository.cs" />
     <Compile Include="ValueObjects\ScannerChange.cs" />
+    <Compile Include="ValueObjects\ScannerWithOptionVolume.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PT.Common.Repository\PT.Common.Repository.csproj">

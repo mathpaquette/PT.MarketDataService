@@ -1,4 +1,5 @@
 using PT.MarketDataService.Repository.EfRepository.Seeds;
+using PT.MarketDataService.Repository.EfRepository.StoredProcedures;
 
 namespace PT.MarketDataService.Repository.EfRepository.Migrations
 {
@@ -23,6 +24,14 @@ namespace PT.MarketDataService.Repository.EfRepository.Migrations
 
             var scannerConfig = OptVolumeMostActiveScannerConfigSeed.GetOptVolumeMostActiveScannerConfig();
             context.ScannerConfigs.AddOrUpdate(scannerConfig);
+
+            // Create Stored Procedures
+            GetScannerSymbolsOrderByOptionVolume(context);
+        }
+
+        private void GetScannerSymbolsOrderByOptionVolume(MarketDataServiceContext context)
+        {
+            context.Database.ExecuteSqlCommand(StoredProcedureFiles.mdsGetScannerSymbolsOrderByOptionVolume);
         }
     }
 }
