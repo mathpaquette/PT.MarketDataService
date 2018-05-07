@@ -14,6 +14,7 @@ namespace PT.Common.Repository.EfRepository
         public EfRepository(DbContext context)
         {
             Context = context;
+            DbSet = context.Set<TEntity>();
         }
 
         public virtual void Add(TEntity entity)

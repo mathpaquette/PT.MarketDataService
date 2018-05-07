@@ -14,6 +14,7 @@ namespace PT.Common.Repository.EfRepository
         public EfCompoundKeyRepository(DbContext context)
         {
             Context = context;
+            DbSet = context.Set<TEntity>();
         }
 
         public virtual TEntity Get(TKey key, TKey2 key2)
@@ -60,6 +61,7 @@ namespace PT.Common.Repository.EfRepository
         public EfCompoundKeyRepository(DbContext context)
         {
             Context = context;
+            DbSet = context.Set<TEntity>();
         }
 
         public virtual TEntity Get(TKey key, TKey2 key2, TKey3 key3)
