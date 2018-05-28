@@ -8,5 +8,6 @@
         int Level1RequestFrequencySec { get; }
         bool EnableMarketDataCollector { get; }
         bool EnableWebApi { get; }
+        string WebApiListenAddress { get; }
     }
 }

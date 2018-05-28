@@ -1,6 +1,7 @@
 ﻿using System.Web.Http;
 using Microsoft.Owin.Hosting;
 using Owin;
+using PT.MarketDataService.Core.DomainServices;
 using SimpleInjector;
 using SimpleInjector.Integration.WebApi;
 using SimpleInjector.Lifestyles;
@@ -10,17 +11,18 @@ namespace PT.MarketDataService.Application.Owin
 {
     public class OwinStartup
     {
-        string baseAddress = "http://localhost:9000/";
         private readonly Container _container;
+        private readonly IAppConfig _appConfig;
 
-        public OwinStartup(Container container)
+        public OwinStartup(Container container, IAppConfig appConfig)
         {
+            _appConfig = appConfig;
             _container = container;
         }
 
         public void Initialize()
         {
-            var server = WebApp.Start(baseAddress, (appBuilder) =>
+            var server = WebApp.Start(_appConfig.WebApiListenAddress, (appBuilder) =>
             {
                 appBuilder.Use(async (context, next) =>
                 {

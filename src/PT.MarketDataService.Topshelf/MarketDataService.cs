@@ -39,7 +39,6 @@ namespace PT.MarketDataService.Topshelf
             if (_appConfig.EnableWebApi)
             {
                 _owinStartup.Initialize();
-
             }
         }
 

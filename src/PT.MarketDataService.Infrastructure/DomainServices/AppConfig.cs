@@ -13,6 +13,7 @@ namespace PT.MarketDataService.Infrastructure.DomainServices
             Level1RequestFrequencySec = int.Parse(ConfigurationManager.AppSettings["Level1RequestFrequencySec"]);
             EnableMarketDataCollector = bool.Parse(ConfigurationManager.AppSettings["EnableMarketDataCollector"]);
             EnableWebApi = bool.Parse(ConfigurationManager.AppSettings["EnableWebApi"]);
+            WebApiListenAddress = ConfigurationManager.AppSettings["WebApiListenAddress"];
         }
 
         public string IbHost { get; }
@@ -21,5 +22,6 @@ namespace PT.MarketDataService.Infrastructure.DomainServices
         public int Level1RequestFrequencySec { get; }
         public bool EnableMarketDataCollector { get; }
         public bool EnableWebApi { get; }
+        public string WebApiListenAddress { get; }
     }
 }
