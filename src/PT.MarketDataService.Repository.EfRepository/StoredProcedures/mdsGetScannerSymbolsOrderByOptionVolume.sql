@@ -6,6 +6,8 @@ BEGIN
 
 SET NOCOUNT ON;
 
+DECLARE @MaxTimeOffsetTimestamp AS DATETIME = @CurrentTimestamp - CAST(@MaxTimeOffset AS DATETIME)
+
 SELECT sr.Symbol
 	,l1.CallVolume + l1.PutVolume AS OptionVolume
 FROM (
@@ -15,7 +17,7 @@ FROM (
 			) AS Rn
 	FROM scanners
 	WHERE Timestamp <= @CurrentTimestamp
-		AND CAST(Timestamp AS DATE) = Cast(@CurrentTimestamp AS DATE)
+		AND Timestamp >= @MaxTimeOffsetTimestamp
 	) s
 INNER JOIN ScannerRows sr ON sr.ScannerId = s.Id
 OUTER APPLY (
@@ -23,7 +25,7 @@ OUTER APPLY (
 	FROM Level1MarketDatas
 	WHERE Level1MarketDatas.Symbol = sr.Symbol
 		AND Level1MarketDatas.Timestamp <= s.Timestamp
-		AND Timestamp >= @CurrentTimestamp - CAST(@MaxTimeOffset AS DATETIME)
+		AND Level1MarketDatas.Timestamp >= @MaxTimeOffsetTimestamp
 	ORDER BY Level1MarketDatas.Timestamp DESC
 	) AS l1
 WHERE Rn = 1

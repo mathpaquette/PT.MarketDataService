@@ -3,10 +3,7 @@ using PT.MarketDataService.Repository.EfRepository.StoredProcedures;
 
 namespace PT.MarketDataService.Repository.EfRepository.Migrations
 {
-    using System;
-    using System.Data.Entity;
     using System.Data.Entity.Migrations;
-    using System.Linq;
 
     internal sealed class Configuration : DbMigrationsConfiguration<PT.MarketDataService.Repository.EfRepository.MarketDataServiceContext>
     {
