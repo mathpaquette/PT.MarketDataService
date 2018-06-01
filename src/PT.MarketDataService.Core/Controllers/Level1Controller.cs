@@ -37,7 +37,11 @@ namespace PT.MarketDataService.Core.Controllers
             _level1RequestsBySymbol = new Dictionary<string, Level1Request>();
 
             _level1RequestQueue = new ActionBlock<Level1Request>(
-                async request => await ProcessRequest(request),
+                async request =>
+                {
+                    try { await ProcessRequest(request); }
+                    catch (Exception e) { Logger.Error(e); }
+                },
                 new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 5 });
         }
 

@@ -34,7 +34,11 @@ namespace PT.MarketDataService.Core.Controllers
             _marketDataProvider = marketDataProvider;
 
             _scannerRequestsQueue = new ActionBlock<ScannerRequest>(
-                async request => await ProcessRequest(request), 
+                async request =>
+                {
+                    try { await ProcessRequest(request); }
+                    catch (Exception e) { Logger.Error(e); }
+                }, 
                 new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 2 });
         }
 
