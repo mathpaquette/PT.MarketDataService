@@ -1,22 +1,20 @@
-﻿using PT.MarketDataService.Core;
+﻿using System;
 using PT.MarketDataService.Core.Entities;
 
 namespace PT.MarketDataService.Repository.EfRepository.Seeds
 {
-    public static class OptVolumeMostActiveScannerConfigSeed
+    public static class ScannerConfigSeed
     {
-        private const string MostActiveOption = "OPT_VOLUME_MOST_ACTIVE";
-
-        public static ScannerConfig GetOptVolumeMostActiveScannerConfig()
+        public static ScannerConfig GetConfiguredScannerConfig(int scannerConfigId, string scanCode, TimeSpan startTime, TimeSpan endTime)
         {
             double[] prices = { 0, 7, 14, 21, 28, 35, 42, 49, 56, 63, 70, 82, 103, 124, 194, 264 };
 
             var scannerConfig = new ScannerConfig()
             {
-                Id = 1,
+                Id = scannerConfigId,
                 Enable = true,
-                StartTime = Exchange.MarketOpenHour,
-                EndTime = Exchange.MarketCloseHour,
+                StartTime = startTime,
+                EndTime = endTime,
                 Frequency = 60
             };
 
@@ -24,7 +22,7 @@ namespace PT.MarketDataService.Repository.EfRepository.Seeds
             {
                 var parameter = new ScannerParameter()
                 {
-                    ScanCode = MostActiveOption,
+                    ScanCode = scanCode,
                     Instrument = "STK",
                     LocationCode = "STK.US",
                     NumberOfRows = 50,

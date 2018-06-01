@@ -66,7 +66,6 @@ namespace PT.MarketDataService.Infrastructure.Extensions
                    data.Ask.HasValue &&
                    data.LastSize.HasValue &&
                    data.Last.HasValue &&
-                   data.Open.HasValue &&
                    data.High.HasValue &&
                    data.Low.HasValue &&
                    data.Close.HasValue &&

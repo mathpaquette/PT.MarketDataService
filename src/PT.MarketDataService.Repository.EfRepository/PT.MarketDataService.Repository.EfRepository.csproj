@@ -74,7 +74,7 @@
     <Compile Include="Repositories\ScannerConfigRepository.cs" />
     <Compile Include="Repositories\ScannerRepository.cs" />
     <Compile Include="RepositoryModule.cs" />
-    <Compile Include="Seeds\OptVolumeMostActiveScannerConfigSeed.cs" />
+    <Compile Include="Seeds\ScannerConfigSeed.cs" />
     <Compile Include="StoredProcedures\StoredProcedure.cs" />
     <Compile Include="StoredProcedures\StoredProcedureFiles.Designer.cs">
       <AutoGen>True</AutoGen>
