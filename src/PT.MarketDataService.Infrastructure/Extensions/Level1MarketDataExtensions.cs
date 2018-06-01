@@ -57,21 +57,5 @@ namespace PT.MarketDataService.Infrastructure.Extensions
                     break;
             }
         }
-
-        public static bool Completed(this Level1MarketData data)
-        {
-            return data.BidSize.HasValue &&
-                   data.Bid.HasValue &&
-                   data.AskSize.HasValue &&
-                   data.Ask.HasValue &&
-                   data.LastSize.HasValue &&
-                   data.Last.HasValue &&
-                   data.High.HasValue &&
-                   data.Low.HasValue &&
-                   data.Close.HasValue &&
-                   data.Volume.HasValue &&
-                   data.PutVolume.HasValue &&
-                   data.CallVolume.HasValue;
-        }
     }
 }
